@@ -29,12 +29,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public DepartmentFinalResponseDto getDepartment(String departmentCode) {
 		DepartmentEntity departmentEntity = departmentRepo.findByDepartmentCode(departmentCode);
-		DepartmentResponseDto departmentResponseDto = departmentHelper
-				.convertToTargetObject(departmentEntity, DepartmentResponseDto.class);	
-		Notification notification = departmentHelper
-		.buildNotification(DepartmentConstant.ONE_NOTIFICATION_SUCCESS_MESSAGE, 
-				DepartmentConstant.ONE_NOTIFICATION_SUCCESS_STATUS, 
-				DepartmentConstant.ONE_NOTIFICATION_SUCCESS_STATUS_CODE, DepartmentConstant.ONE_NOTIFICATION_SUCCESS_PATH);
+		DepartmentResponseDto departmentResponseDto = null;
+		Notification notification = null;
+		if(departmentEntity != null) {
+			departmentResponseDto = departmentHelper
+					.convertToTargetObject(departmentEntity, DepartmentResponseDto.class);	
+			notification = departmentHelper
+			.buildNotification(DepartmentConstant.ONE_NOTIFICATION_SUCCESS_MESSAGE+" "+departmentCode, 
+					DepartmentConstant.ONE_NOTIFICATION_SUCCESS_STATUS, 
+					DepartmentConstant.ONE_NOTIFICATION_SUCCESS_STATUS_CODE, "");
+			
+		}else {
+			notification = departmentHelper
+					.buildNotification(DepartmentConstant.NO_RECORDS_FOUND_MESSAGE+" "+departmentCode, 
+							DepartmentConstant.NO_RECORDS_FOUND_STATUS, 
+							DepartmentConstant.NO_RECORDS_FOUND_STATUS_CODE, "");
+		}
 		DepartmentFinalResponseDto finalResponseDto = new DepartmentFinalResponseDto();
 		finalResponseDto.setDepartmentResponseDto(departmentResponseDto);
 		finalResponseDto.setNotification(notification);
@@ -42,16 +52,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public DepartmentListDto getAllDepartment(String statusMessage, String path, String status, Integer statusCode) {		
+	public DepartmentListDto getAllDepartment(String statusMessage, String status, Integer statusCode) {		
 		List<DepartmentEntity> departmentEntities = departmentRepo.findAll();
 		List<DepartmentResponseDto> departmentResponseDtos = departmentEntities.stream()
 		.map(de -> departmentHelper.convertToTargetObject(de, DepartmentResponseDto.class))
 		.collect(Collectors.toList());
+		
+		if(departmentResponseDtos.isEmpty() && statusMessage == null && status == null && statusCode == null) {
+			statusMessage = DepartmentConstant.NO_RECORDS_FOUND_MESSAGE;
+			statusCode = DepartmentConstant.NO_RECORDS_FOUND_STATUS_CODE;
+			status = DepartmentConstant.NO_RECORDS_FOUND_STATUS;
+		}
+			
+		
 		if(statusMessage == null)
 			statusMessage = DepartmentConstant.ALL_NOTIFICATION_SUCCESS_MESSAGE;
 		
-		if(path == null)
-			path = DepartmentConstant.ALL_NOTIFICATION_SUCCESS_PATH;
 		
 		if(status == null)
 			status = DepartmentConstant.ALL_NOTIFICATION_SUCCESS_STATUS;
@@ -59,7 +75,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if(statusCode == null) 
 			statusCode = DepartmentConstant.ALL_NOTIFICATION_SUCCESS_STATUS_CODE;
 		
-		Notification notification = departmentHelper.buildNotification(statusMessage, status, statusCode, path);
+		Notification notification = departmentHelper.buildNotification(statusMessage, status, statusCode, "");
 		DepartmentListDto departmentListDto = new DepartmentListDto();
 		departmentListDto.setDepartmentResponseDtos(departmentResponseDtos);
 		departmentListDto.setNotification(notification);
@@ -75,7 +91,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			departmentDetails.setDepartmentName(departmentRequestDto.getDepartmentName());
 			departmentRepo.save(departmentDetails);
 			return getAllDepartment(DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_MESSAGE, 
-					DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_PATH, DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_STATUS,
+					DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_STATUS,
 					DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_STATUS_CODE);			
 		}
 		return null;
@@ -87,7 +103,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if(departmentDetails != null) {
 			departmentRepo.delete(departmentDetails);			
 			return getAllDepartment(DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_MESSAGE, 
-					DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_PATH, 
 					DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_STATUS,
 					DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_STATUS_CODE);
 		}
@@ -99,7 +114,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentEntity departmentEntity = departmentHelper.convertToTargetObject(departmentRequestDto, DepartmentEntity.class);
 		departmentRepo.save(departmentEntity);
 		return getAllDepartment(DepartmentConstant.ADD_NOTIFICATION_SUCCESS_MESSAGE, 
-				DepartmentConstant.ADD_NOTIFICATION_SUCCESS_PATH,
 				DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS,
 				DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS_CODE);
 	}

@@ -6,7 +6,7 @@ import com.departments.app.dto.DepartmentRequestDto;
 
 public interface DepartmentService {
 	public DepartmentFinalResponseDto getDepartment(String departmentCode);	
-	public DepartmentListDto getAllDepartment(String statusMessage, String path, String status, Integer statusCode);	
+	public DepartmentListDto getAllDepartment(String statusMessage, String status, Integer statusCode);	
 	public DepartmentListDto updateDepartment(DepartmentRequestDto departmentRequestDto);
 	public DepartmentListDto deleteDepartment(String departmentCode);
 	public DepartmentListDto addDepartment(DepartmentRequestDto departmentRequestDto);	
