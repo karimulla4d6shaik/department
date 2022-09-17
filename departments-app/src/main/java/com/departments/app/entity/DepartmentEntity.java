@@ -15,13 +15,13 @@ public class DepartmentEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "DEPT_ID")
 	private Integer departmentId;
-	@Column(name = "DEPT_CODE")
+	@Column(name = "DEPT_CODE", unique = true, nullable = false)
 	private String departmentCode;
-	@Column(name = "DEPT_NAME")
+	@Column(name = "DEPT_NAME", nullable = false)
 	private String departmentName;
-	@Column(name = "DEPT_DESC")
+	@Column(name = "DEPT_DESC", nullable = false)
 	private String departmentDesc;
-	@Column(name = "DEPT_LOC")
+	@Column(name = "DEPT_LOC", nullable = false)
 	private String departmentLocation;
 
 	public Integer getDepartmentId() {

@@ -1,10 +1,16 @@
 package com.departments.app.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 public class DepartmentRequestDto {
 
+	@NotEmpty(message = "Department code must not empty or null")
 	private String departmentCode;
+	@NotEmpty(message = "Department name must not empty or null")
 	private String departmentName;
+	@NotEmpty(message = "Department description must not empty or null")
 	private String departmentDesc;
+	@NotEmpty(message = "Department location must not empty or null")
 	private String departmentLocation;
 
 	public String getDepartmentCode() {
