@@ -28,4 +28,9 @@ public interface DepartmentConstant {
 	public static final String ADD_NOTIFICATION_SUCCESS_MESSAGE = "Department added successfully...";
 	public static final String ADD_NOTIFICATION_SUCCESS_STATUS = HttpStatus.CREATED.getReasonPhrase();	
 	public static final Integer ADD_NOTIFICATION_SUCCESS_STATUS_CODE = HttpStatus.CREATED.value();
+	
+
+	public static final String DEPARTMENT_EXIST_MESSAGE = "Department is already existing with this department code ";
+	public static final String DEPARTMENT_EXIST_STATUS = HttpStatus.CONFLICT.getReasonPhrase();	
+	public static final Integer DEPARTMENT_EXIST_STATUS_CODE = HttpStatus.CONFLICT.value();
 }

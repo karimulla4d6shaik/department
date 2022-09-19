@@ -111,11 +111,21 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentListDto addDepartment(DepartmentRequestDto departmentRequestDto) {
-		DepartmentEntity departmentEntity = departmentHelper.convertToTargetObject(departmentRequestDto, DepartmentEntity.class);
-		departmentRepo.save(departmentEntity);
-		return getAllDepartment(DepartmentConstant.ADD_NOTIFICATION_SUCCESS_MESSAGE, 
-				DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS,
-				DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS_CODE);
+		DepartmentEntity departmentDetails = departmentRepo.findByDepartmentCode(departmentRequestDto.getDepartmentCode());
+		DepartmentListDto allDepartment = null;
+		if(departmentDetails == null) {
+			DepartmentEntity departmentEntity = departmentHelper.convertToTargetObject(departmentRequestDto, DepartmentEntity.class);
+			departmentRepo.save(departmentEntity);
+			allDepartment = getAllDepartment(DepartmentConstant.ADD_NOTIFICATION_SUCCESS_MESSAGE, 
+					DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS,
+					DepartmentConstant.ADD_NOTIFICATION_SUCCESS_STATUS_CODE);
+		}else {
+			allDepartment = getAllDepartment(DepartmentConstant.DEPARTMENT_EXIST_MESSAGE, 
+					DepartmentConstant.DEPARTMENT_EXIST_STATUS,
+					DepartmentConstant.DEPARTMENT_EXIST_STATUS_CODE);
+		}
+		
+		return allDepartment;
 	}
 
 	@Override
