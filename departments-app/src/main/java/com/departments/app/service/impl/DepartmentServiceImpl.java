@@ -3,6 +3,8 @@ package com.departments.app.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import com.departments.app.util.DepartmentHelper;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 	
+	private Logger LOGGER = LoggerFactory.getLogger(DepartmentServiceImpl.class);
+	
 	@Autowired
 	private DepartmentRepo departmentRepo;
 	@Autowired
@@ -28,6 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentFinalResponseDto getDepartment(String departmentCode) {
+		LOGGER.info("Start of DepartmentServiceImpl class, getDepartment methood DEPARTMENT CODE - {}",departmentCode);
 		DepartmentEntity departmentEntity = departmentRepo.findByDepartmentCode(departmentCode);
 		DepartmentResponseDto departmentResponseDto = null;
 		Notification notification = null;
@@ -48,11 +53,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentFinalResponseDto finalResponseDto = new DepartmentFinalResponseDto();
 		finalResponseDto.setDepartmentResponseDto(departmentResponseDto);
 		finalResponseDto.setNotification(notification);
+		LOGGER.info("End of DepartmentServiceImpl class, getDepartment methood DEPARTMENT FINAL RESPONSE DTO - {}",finalResponseDto);
 		return finalResponseDto;
 	}
 
 	@Override
-	public DepartmentListDto getAllDepartment(String statusMessage, String status, Integer statusCode) {		
+	public DepartmentListDto getAllDepartment(String statusMessage, String status, Integer statusCode) {
+		LOGGER.info("Start of DepartmentServiceImpl class, getAllDepartment methood StatusMessage - {}, Status - {}, StatusCode - {}",statusMessage, status, statusCode);
 		List<DepartmentEntity> departmentEntities = departmentRepo.findAll();
 		List<DepartmentResponseDto> departmentResponseDtos = departmentEntities.stream()
 		.map(de -> departmentHelper.convertToTargetObject(de, DepartmentResponseDto.class))
@@ -79,38 +86,46 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentListDto departmentListDto = new DepartmentListDto();
 		departmentListDto.setDepartmentResponseDtos(departmentResponseDtos);
 		departmentListDto.setNotification(notification);
+		LOGGER.info("End of DepartmentServiceImpl class, getAllDepartment methood DEPARTMENT LIST DTO - {}",departmentListDto);
 		return departmentListDto;
 	}
 
 	@Override
 	public DepartmentListDto updateDepartment(DepartmentRequestDto departmentRequestDto) {
+		LOGGER.info("Start of DepartmentServiceImpl class, updateDepartment methood DEPARTMENT REQUEST DTO - {}",departmentRequestDto);
 		DepartmentEntity departmentDetails = departmentRepo.findByDepartmentCode(departmentRequestDto.getDepartmentCode());
 		if(departmentDetails != null) {
 			departmentDetails.setDepartmentDesc(departmentRequestDto.getDepartmentDesc());
 			departmentDetails.setDepartmentLocation(departmentRequestDto.getDepartmentLocation());
 			departmentDetails.setDepartmentName(departmentRequestDto.getDepartmentName());
 			departmentRepo.save(departmentDetails);
+			LOGGER.info("End of DepartmentServiceImpl class, updateDepartment methood DEPARTMENT FOUND");
 			return getAllDepartment(DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_MESSAGE, 
 					DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_STATUS,
 					DepartmentConstant.UPDATE_NOTIFICATION_SUCCESS_STATUS_CODE);			
 		}
+		LOGGER.info("End of DepartmentServiceImpl class, updateDepartment methood DEPARTMENT NOT FOUND");
 		return null;
 	}
 
 	@Override
 	public DepartmentListDto deleteDepartment(String departmentCode) {
+		LOGGER.info("Start of DepartmentServiceImpl class, deleteDepartment methood DEPARTMENT CODE - {}",departmentCode);
 		DepartmentEntity departmentDetails = departmentRepo.findByDepartmentCode(departmentCode);
 		if(departmentDetails != null) {
-			departmentRepo.delete(departmentDetails);			
+			departmentRepo.delete(departmentDetails);
+			LOGGER.info("End of DepartmentServiceImpl class, deleteDepartment methood DEPARTMENT CODE - {}, Found",departmentCode);
 			return getAllDepartment(DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_MESSAGE, 
 					DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_STATUS,
 					DepartmentConstant.DELETE_NOTIFICATION_SUCCESS_STATUS_CODE);
 		}
+		LOGGER.info("End of DepartmentServiceImpl class, deleteDepartment methood DEPARTMENT CODE - {} Not Found",departmentCode);
 		return null;
 	}
 
 	@Override
 	public DepartmentListDto addDepartment(DepartmentRequestDto departmentRequestDto) {
+		LOGGER.info("Start of DepartmentServiceImpl class, addDepartment methood DEPARTMENT DETAILS - {}",departmentRequestDto);
 		DepartmentEntity departmentDetails = departmentRepo.findByDepartmentCode(departmentRequestDto.getDepartmentCode());
 		DepartmentListDto allDepartment = null;
 		if(departmentDetails == null) {
@@ -124,15 +139,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 					DepartmentConstant.DEPARTMENT_EXIST_STATUS,
 					DepartmentConstant.DEPARTMENT_EXIST_STATUS_CODE);
 		}
-		
+		LOGGER.info("End of DepartmentServiceImpl class, addDepartment methood ALL DEPARTMENT DETAILS - {}",allDepartment);
 		return allDepartment;
 	}
 
 	@Override
 	public boolean findDepartmentByDeptCode(String departmentCode) {
+		LOGGER.info("Start of DepartmentServiceImpl class, findDepartmentByDeptCode methood DEPARTMENT CODE - {}",departmentCode);
 		DepartmentEntity departmentEntity = departmentRepo.findByDepartmentCode(departmentCode);
-		if(departmentEntity != null)
+		if(departmentEntity != null) {
+			LOGGER.info("End of DepartmentServiceImpl class, findDepartmentByDeptCode methood DEPARTMENT CODE - {}, Found",departmentCode);
 			return true;
+		}		
+		LOGGER.info("End of DepartmentServiceImpl class, findDepartmentByDeptCode methood DEPARTMENT CODE - {}, Not Found",departmentCode);
 		return false;
 	}
 

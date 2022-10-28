@@ -45,4 +45,10 @@ public class DepartmentRequestDto {
 		this.departmentLocation = departmentLocation;
 	}
 
+	@Override
+	public String toString() {
+		return "DepartmentRequestDto [departmentCode=" + departmentCode + ", departmentName=" + departmentName
+				+ ", departmentDesc=" + departmentDesc + ", departmentLocation=" + departmentLocation + "]";
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.departments.app.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DepartmentListDto {
 
@@ -23,4 +24,8 @@ public class DepartmentListDto {
 		this.notification = notification;
 	}
 
+	@Override
+	public String toString() {
+		return "DepartmentResponseDto - ["+departmentResponseDtos.stream().map(drd -> drd.getDepartmentCode()+", ").collect(Collectors.toList())+"], Notificatio details - "+notification;
+	}
 }
