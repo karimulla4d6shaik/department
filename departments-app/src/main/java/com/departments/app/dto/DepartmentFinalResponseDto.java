@@ -21,4 +21,12 @@ public class DepartmentFinalResponseDto {
 		this.departmentResponseDto = departmentResponseDto;
 	}
 
+	@Override
+	public String toString() {
+		return "DepartmentFinalResponseDto [notification=" + notification + ", departmentResponseDto="
+				+ departmentResponseDto + "]";
+	}
+	
+	
+
 }

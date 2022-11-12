@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.departments.app.util.DepartmentHelper;
 
 @RestControllerAdvice
 public class DepartmentExceptionHandler {
+	private Logger LOGGER = LoggerFactory.getLogger(DepartmentExceptionHandler.class);
 	@Autowired
 	private DepartmentHelper departmentHelper;
 
@@ -27,6 +30,7 @@ public class DepartmentExceptionHandler {
 	public ResponseEntity<Notification> methodNotAllowedExceptionCase(HttpRequestMethodNotSupportedException exception, HttpServletRequest request){
 		Notification notification = departmentHelper.buildNotification(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(), 
 				HttpStatus.METHOD_NOT_ALLOWED.value(), request.getRequestURI());
+		LOGGER.error("DepartmentExceptionHandler class, methodNotAllowedExceptionCase method NOTIFICATION Details - {}",notification);
 		return new ResponseEntity<>(notification, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
@@ -34,6 +38,7 @@ public class DepartmentExceptionHandler {
 	public ResponseEntity<Notification> nullPointerException(NullPointerException exception, HttpServletRequest request){
 		Notification notification = departmentHelper.buildNotification(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), 
 				HttpStatus.INTERNAL_SERVER_ERROR.value(), request.getRequestURI());
+		LOGGER.error("DepartmentExceptionHandler class, nullPointerException method NOTIFICATION Details - {}",notification);
 		return new ResponseEntity<>(notification, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -44,6 +49,7 @@ public class DepartmentExceptionHandler {
 		for(FieldError fieldError : fieldErrors) {
 			map.put(fieldError.getField(), fieldError.getDefaultMessage());
 		}		
+		LOGGER.error("DepartmentExceptionHandler class, clientErrorException method NOTIFICATION Details - {}",map);
 		return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -51,6 +57,7 @@ public class DepartmentExceptionHandler {
 	public ResponseEntity<Notification> exception(Exception exception, HttpServletRequest request){
 		Notification notification = departmentHelper.buildNotification(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), 
 				HttpStatus.INTERNAL_SERVER_ERROR.value(), request.getRequestURI());
+		LOGGER.error("DepartmentExceptionHandler class, exception method NOTIFICATION Details - {}",notification);
 		return new ResponseEntity<>(notification, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
