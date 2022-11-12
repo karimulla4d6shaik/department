@@ -50,4 +50,10 @@ public class Notification {
 		this.time = time;
 	}
 
+	@Override
+	public String toString() {
+		return "Notification [status=" + status + ", statusCode=" + statusCode + ", message=" + message + ", path="
+				+ path + ", time=" + time + "]";
+	}
+
 }
